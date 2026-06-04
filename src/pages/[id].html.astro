@@ -1,12 +1,12 @@
 ---
-import PostLayout from "../../layouts/post.astro";
+import PostLayout from "../layouts/post.astro";
 
 interface PathProps {
   filePath?: string;
 }
 
 export async function getStaticPaths() {
-  const postsImport = import.meta.glob("./*.md");
+  const postsImport = import.meta.glob("./posts/*.md");
   const paths: Array<{ params: { id: string }; props: PathProps }> = [];
 
   for (const [filePath] of Object.entries(postsImport)) {
@@ -36,7 +36,7 @@ if (Number.isNaN(numericId)) {
 }
 
 const { filePath } = Astro.props as PathProps;
-const contentModules = import.meta.glob("./*.md");
+const contentModules = import.meta.glob("./posts/*.md");
 
 if (!filePath) {
   throw new Response(null, { status: 404 });

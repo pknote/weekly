@@ -6,7 +6,9 @@
       "Bash(git commit -m ':*)",
       "Bash(git tag:*)",
       "Bash(ls src/pages/posts/*.md)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(git commit:*)",
+      "Bash(grep -E \"^\\\\d.*\\\\.html$\")"
     ]
   }
 }
