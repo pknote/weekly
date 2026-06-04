@@ -4,6 +4,7 @@ import tailwind from "@astrojs/tailwind";
 import remarkBreaks from "remark-breaks";
 
 import { defineConfig } from "astro/config";
+import sitemap from "@astrojs/sitemap";
 import { parse } from "node-html-parser";
 import { SITE } from "./src/config";
 
@@ -93,7 +94,8 @@ function defaultLayoutPlugin() {
 
 export default defineConfig({
   prefetch: true,
-  integrations: [tailwind()],
+  site: SITE.homePage,
+  integrations: [tailwind(), sitemap()],
   markdown: {
     remarkPlugins: [
       defaultLayoutPlugin,
