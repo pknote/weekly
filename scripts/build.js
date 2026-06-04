@@ -1,19 +1,9 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import axios from "axios";
+import dayjs from "dayjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-async function fetchCiTime(filePath, repo) {
-  try {
-    const url = `https://api.github.com/repos/${repo}/commits?path=${encodeURIComponent(filePath)}&page=1&per_page=1`;
-    const response = await axios.get(url);
-    return response.data[0]?.commit.committer.date.split("T")[0] || null;
-  } catch {
-    return null;
-  }
-}
 
 async function main() {
   // Dynamically import config
@@ -54,8 +44,9 @@ async function main() {
     const descMatch = mdContent.match(/<small>(.*?)<\/small>/s);
     const description = descMatch ? descMatch[1].trim() : "";
 
-    const filePath = `src/pages/posts/${name}`;
-    const modified = await fetchCiTime(filePath, repo);
+    // Use local file mtime as modified date
+    const fileStat = await fs.stat(path.join(postsDir, name));
+    const modified = dayjs(fileStat.mtime).format("YYYY-MM-DD");
 
     posts.push({ num, title: shortTitle, url, pic, description, modified });
   }
