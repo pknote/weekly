@@ -31,7 +31,7 @@ const { image, description, date } = post.frontmatter;
 >
   <img
     data-placeholder-background="linear-gradient(to bottom, var(--placeholder-gradient-start), var(--placeholder-gradient-end))"
-    data-src={`${image}?x-oss-process=image/resize,w_640/format,webp`}
+    data-src={image}
     data-alt={title}
     class="lozad block md:w-80 md:h-48 sm:w-96 w-full sm:h-52 h-56 rounded-t-md"
   />

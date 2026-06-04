@@ -6,7 +6,6 @@ import remarkBreaks from "remark-breaks";
 import { defineConfig } from "astro/config";
 import { parse } from "node-html-parser";
 import { SITE } from "./src/config";
-import rehypeImage from "./rehype-image.js";
 
 // Markdown 配置 - 控制换行行为
 const markdownConfig = {
@@ -100,7 +99,7 @@ export default defineConfig({
       // 根据配置决定是否启用硬换行
       ...(markdownConfig.hardBreaks ? [remarkBreaks] : [])
     ],
-    rehypePlugins: [rehypeImage],
+    rehypePlugins: [],
     remarkRehype: {
       handlers: {},
       allowDangerousHtml: markdownConfig.allowDangerousHtml
