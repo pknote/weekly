@@ -4,39 +4,56 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**weekly** is a personal weekly blog by Tw93 (潮流周刊), documenting life through photo posts. Built with Astro as a static site, deployed on Vercel.
+**潮流周刊** (Weekly) — a personal blog by Tw93, built with Astro 5.x as a static site. Posts are Markdown files published weekly.
 
-## Development Commands
+## Commands
 
 ```bash
 npm run dev      # Start dev server
-npm run build   # Build for production (runs pagefind postbuild automatically)
-npm run preview # Preview production build
+npm run build   # Build static site + run pagefind index (postbuild hook)
+npm run preview # Preview built site
 ```
 
 ## Architecture
 
-### Content Structure
-- Posts live in `src/pages/posts/` as markdown files named `{number}-{title}.md` (e.g., `241-经过长沙.md`)
-- `posts.json` at root is an index of all posts with metadata (num, title, url, pic)
-- Frontmatter fields: `image`, `description`, `date` override auto-detection
+### Content Processing Pipeline
 
-### URL Style
-Posts use `.html` extension: `/posts/176.html`
-- File naming: `{number}.md` (e.g., `176.md`)
-- No redirects - direct file access
-- Dynamic route: `[id].html.astro`
+Posts live in `src/pages/posts/` as `.md` files named `NNN-title.md`. The pipeline has two stages:
 
-### Image Processing
-`rehype-image.js` automatically appends `?x-oss-process=image/resize,w_3600/format,webp` to CDN images from `cdn.fliggy.com` and `gw.alicdn.com` (excluding .gif/.svg).
+1. **`astro.config.mjs`** — A `defaultLayoutPlugin` remark plugin auto-generates frontmatter for every post:
+   - Sets `layout: "@layouts/post.astro"`
+   - Extracts `issueNumber` and `issueTitle` from filename
+   - Auto-assigns `image` from first `<img>` tag in content, `description` from second paragraph
+   - Calculates `date` (uses file creation time, or reverse-counts from issue number for `tw93/weekly`)
+   - Generates `numericUrl` (`/posts/NNN`) and `socialImage`
 
-### Site Configuration
-`src/config.ts` contains `SITE` object with author info, social links, and repo name that controls behavior (e.g., social image generation for issue 110+).
+2. **`[id].astro`** (`src/pages/posts/[id].astro`) — Handles routing:
+   - `getStaticPaths()` maps both numeric (`241`) and slug (`241-经过长沙`) IDs
+   - Redirects legacy slugs to numeric URLs via 301
+   - Enhances frontmatter with `url`, `numericUrl`, `legacySlug`, `issueNumber`
 
-## Key Files
+### URL Convention
 
-- `astro.config.mjs` — Astro config with custom remark/rehype plugins for post metadata and image processing
-- `src/util.ts` — URL parsing utilities: `parseTitle`, `getIndex`, `toNumericUrl`, `sortPosts`
-- `src/config.ts` — Site-wide configuration
-- `src/layouts/post.astro` — Post article layout
-- `src/components/LeftSidebar.astro` — Navigation sidebar with post list
+- **Numeric URL**: `/posts/241` — primary, clean URL
+- **Legacy slug URL**: `/posts/241-经过长沙` — preserved for backlinks, redirects to numeric
+- `util.ts` helpers (`parseTitle`, `getIndex`, `toNumericUrl`) normalize between forms
+
+### Layout Structure
+
+- **`BaseLayout.astro`** — HTML shell with `<HeadSEO>`, `<HeadCommon>`, header/footer
+- **`post.astro`** — Article layout with 3-column grid (sidebar / content / TOC), comment system (Giscus), prev/next navigation
+- **`Card.astro`** — Homepage post card with lazy image loading (lozad)
+
+### Configuration
+
+`src/config.ts` — Global site metadata (title, author, repo, social links). **Must be updated when forking.**
+
+The `SITE.repo` value in `astro.config.mjs` is used to switch between official behavior and fork behavior (date calculation logic, social images).
+
+### Search
+
+Pagefind runs automatically after build (`postbuild: pagefind --site dist`). Index is generated from the built HTML in `dist/`.
+
+### Comment System
+
+Giscus (GitHub Discussions). The repo and category IDs in `post.astro` are for the original `tw93/weekly` repo — swap for your own when forking.

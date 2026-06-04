@@ -14,7 +14,6 @@ export interface Props {
     description: string;
     url: string;
     socialImage: string;
-    title?: string;
     numericUrl?: string;
     legacySlug?: string;
     issueTitle?: string;
@@ -36,13 +35,12 @@ const {
   socialImage,
   numericUrl,
   legacySlug,
-  title: postTitle
+  issueTitle
 } = Astro.props.frontmatter;
 
 const normalizedCurrent = normalize(currentPage) ?? currentPage;
 const normalizedNumeric = normalize(numericUrl);
 const effectivePath = normalizedNumeric ?? normalizedCurrent;
-const issueTitle = Astro.props.frontmatter.issueTitle ?? postTitle;
 let title = parseTitle(effectivePath, legacySlug, issueTitle);
 
 const content = {
@@ -229,6 +227,14 @@ let prevUrl = postIndex < allPosts.length ? toNavUrl(allPosts[allPosts.length - 
           <Search />
         </h1>
         <slot />
+        <div class="flex align-middle justify-center mt-4">
+          <a
+            class="inline-block items-center rounded px-5 py-3 text-sm font-medium pay-button"
+            href="https://miaoyan.app/cats.html?name=潮流周刊"
+            target="_blank"
+            rel="noreferrer">203 位好友喜欢周刊 ❤️</a
+          >
+        </div>
         <hr />
         <div
           class="flex justify-between md:flex-row flex-col mt-2 post-footer"
@@ -244,16 +250,28 @@ let prevUrl = postIndex < allPosts.length ? toNavUrl(allPosts[allPosts.length - 
           <div class="md:mt-0 mt-4 flex-1 text-right">
             {nextUrl ? <a href={nextUrl}>下一篇 |</a> : null}
             {prevUrl ? <a href={prevUrl}>上一篇 |</a> : null}
-            <a href="https://beian.miit.gov.cn/" target="_blank">皖ICP备2024037392号</a>
+            <a href="/">去首页 |</a>
+            <a
+              href={`https://twitter.com/${SITE.twitterId}`}
+              target="_blank"
+              title="Follow">Twitter</a
+            >
+            <a
+              href={`https://github.com/${SITE.githubId}/weekly`}
+              title="Star"
+              target="_blank"
+              class="lg:inline-block hidden"
+            >
+              | Github</a
+            >
             <a
               href="/rss.xml"
               title="Subscribe"
               target="_blank"
               class="xl:inline-block hidden"
             >
-             | RSS | </a
+              | RSS</a
             >
-            <a href="/sitemap.xml">Sitemap</a>
           </div>
         </div>
       </div>

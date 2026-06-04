@@ -1,20 +1,18 @@
 import { promises as fs } from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import dayjs from "dayjs";
+import axios from "axios";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// Simple config - can be modified
-const SITE = {
-  title: "胖氪笔记",
-  homePage: "https://windowsplus.cn/",
-};
+async function fetchCiTime(filePath) {
+  const url = `https://api.github.com/repos/tw93/weekly/commits?path=${filePath}&page=1&per_page=1`;
+  const response = await axios.get(url);
+  const ciTime = response.data[0].commit.committer.date.split("T")[0];
+  return ciTime;
+}
 
 async function main() {
-  const postsDir = path.join(__dirname, "src/pages/posts");
+  const readmeContent =
+    "# 潮流周刊\n\n> 记录工程师 Tw93 的不枯燥生活，欢迎订阅，也欢迎 [推荐](https://github.com/tw93/weekly/discussions/22) 你的好东西，Fork 自用可见 [开发文档](https://github.com/tw93/weekly/blob/main/Deploy.md)，期待你玩得开心~\n\n";
 
-  const files = await fs.readdir(postsDir);
+  const files = await fs.readdir("./src/pages/posts");
   const mdFiles = files
     .filter((file) => file.endsWith(".md"))
     .sort((a, b) => {
@@ -24,49 +22,41 @@ async function main() {
     });
 
   const posts = [];
+  let recentContent = "";
+  let readmeContent2 = "";
 
-  for (const name of mdFiles) {
-    const filePath = path.join(postsDir, name);
-    const mdContent = await fs.readFile(filePath, "utf8");
+  for (let i = 0; i < mdFiles.length; i++) {
+    const name = mdFiles[i];
+    const filePath = encodeURIComponent(name);
+    const oldTitle = name.split(".md")[0];
+    const [issueNumberPart, ...restTitleParts] = oldTitle.split("-");
+    const num = parseInt(issueNumberPart);
+    const shortTitle = restTitleParts.join("-") || issueNumberPart;
+    const url = `https://weekly.tw93.fun/posts/${num}`;
+    const title = `第 ${num} 期 - ${shortTitle}`;
 
-    // Extract frontmatter
-    const fmMatch = mdContent.match(/^---\n([\s\S]*?)\n---/);
-    let frontmatter = {};
-    if (fmMatch) {
-      fmMatch[1].split("\n").forEach((line) => {
-        const [key, ...valueParts] = line.split(":");
-        if (key && valueParts.length > 0) {
-          frontmatter[key.trim()] = valueParts.join(":").trim();
-        }
-      });
-    }
-
-    // Extract first image
+    // Read markdown file to extract cover image and description
+    const mdContent = await fs.readFile(`./src/pages/posts/${name}`, "utf8");
     const imgMatch = mdContent.match(/<img\s+src="([^"]+)"/);
     const pic = imgMatch ? imgMatch[1] : "";
-
-    // Extract title from frontmatter or filename
-    const title = frontmatter.title || name.replace(/\.md$/, "");
-
-    // Extract number from filename
-    const numMatch = name.match(/(\d+)/);
-    const num = numMatch ? parseInt(numMatch[1]) : 0;
-
-    // Extract description from <small> tag
+    
     const descMatch = mdContent.match(/<small>(.*?)<\/small>/s);
     const description = descMatch ? descMatch[1].trim() : "";
 
-    // Get file date
-    const stats = await fs.stat(filePath);
-    const date = dayjs(stats.birthtime).format("YYYY/MM/DD");
+    posts.push({ num, title: shortTitle, url, pic, description });
+    readmeContent2 += `* [${title}](${url})\n`;
 
-    const url = `${SITE.homePage.replace(/\/$/, "")}/${num}.html`;
-
-    posts.push({ num, title, url, pic, description, date });
+    if (i < 5) {
+      const modified = await fetchCiTime(`/src/pages/posts/${filePath}`);
+      recentContent += `* [${title}](${url}) - ${modified}\n`;
+    }
   }
 
-  await fs.writeFile("public/posts.json", JSON.stringify(posts, null, 2));
-  console.log(`Generated posts.json with ${posts.length} posts`);
+  await Promise.all([
+    fs.writeFile("README.md", readmeContent + readmeContent2),
+    fs.writeFile("RECENT.md", recentContent),
+    fs.writeFile("public/posts.json", JSON.stringify(posts, null, 2)),
+  ]);
 }
 
 main().catch(console.error);

@@ -6,7 +6,7 @@ import remarkBreaks from "remark-breaks";
 import { defineConfig } from "astro/config";
 import { parse } from "node-html-parser";
 import { SITE } from "./src/config";
-
+import rehypeImage from "./rehype-image.js";
 
 // Markdown 配置 - 控制换行行为
 const markdownConfig = {
@@ -17,6 +17,7 @@ const markdownConfig = {
 };
 
 const DEFAULT_FORMAT = "YYYY/MM/DD";
+const WEEKLY_REPO_NAME = "tw93/weekly";
 const START_DATE = "2022-10-10";
 
 function formatDate(date) {
@@ -25,6 +26,16 @@ function formatDate(date) {
 
 function getFileCreateDate(filePath) {
   return formatDate(fs.statSync(filePath).birthtime);
+}
+
+function getWeeklyDate(num) {
+  return num < 100
+    ? formatDate(dayjs(START_DATE).subtract(100 - num, "week"))
+    : getFileCreateDate(filePath);
+}
+
+function getTwitterImage(num) {
+  return num >= 110 ? `https://weekly.tw93.fun/assets/${num}.jpg` : undefined;
 }
 
 function defaultLayoutPlugin() {
@@ -67,7 +78,15 @@ function defaultLayoutPlugin() {
 
     if (!frontmatter.date) {
       const postNumber = filePath.split(/[\/\\]posts[\/\\]/)[1]?.split("-")[0];
-      frontmatter.date = getFileCreateDate(filePath);
+      frontmatter.date =
+        SITE.repo === WEEKLY_REPO_NAME
+          ? getWeeklyDate(postNumber)
+          : getFileCreateDate(filePath);
+    }
+
+    if (SITE.repo === WEEKLY_REPO_NAME) {
+      const postNumber = filePath.split(/[\/\\]posts[\/\\]/)[1]?.split("-")[0];
+      frontmatter.socialImage = getTwitterImage(postNumber);
     }
   };
 }
@@ -81,7 +100,7 @@ export default defineConfig({
       // 根据配置决定是否启用硬换行
       ...(markdownConfig.hardBreaks ? [remarkBreaks] : [])
     ],
-    rehypePlugins: [],
+    rehypePlugins: [rehypeImage],
     remarkRehype: {
       handlers: {},
       allowDangerousHtml: markdownConfig.allowDangerousHtml

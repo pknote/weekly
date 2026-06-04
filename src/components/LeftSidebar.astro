@@ -11,9 +11,8 @@ let currentPageMatch = currentPage.slice(1).replace(/\/$/, '');
 
 const sidebarSections = allPosts.reduce((sections, post, index) => {
   const legacySlug = post.frontmatter?.legacySlug;
-  const issueTitle = post.frontmatter?.issueTitle ?? post.frontmatter?.title;
-  const postNumber = post.url?.match(/\/(\d+)$/)?.[1];
-  const numericUrl = postNumber ? `/${postNumber}.html` : (post.frontmatter?.numericUrl ?? toNumericUrl(post.url));
+  const issueTitle = post.frontmatter?.issueTitle;
+  const numericUrl = post.frontmatter?.numericUrl ?? toNumericUrl(post.url);
   const route = {
     title: parseTitle(numericUrl, legacySlug, issueTitle),
     link: numericUrl.slice(1),
