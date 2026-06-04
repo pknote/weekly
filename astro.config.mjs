@@ -69,7 +69,7 @@ function defaultLayoutPlugin() {
       frontmatter.image = imageElement.getAttribute("src");
     }
 
-    if (tree.children[1]?.children[1]?.value) {
+    if (!frontmatter.description && tree.children[1]?.children[1]?.value) {
       frontmatter.description = tree.children[1].children[1].value;
     }
 
