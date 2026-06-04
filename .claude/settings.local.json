@@ -8,7 +8,17 @@
       "Bash(ls src/pages/posts/*.md)",
       "Bash(npm run:*)",
       "Bash(git commit:*)",
-      "Bash(grep -E \"^\\\\d.*\\\\.html$\")"
+      "Bash(grep -E \"^\\\\d.*\\\\.html$\")",
+      "Bash(cat src/pages/[id].html.astro)",
+      "Bash(curl -s http://localhost:4321/222.html)",
+      "Bash(pkill -f \"astro dev\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:4321/222.html)",
+      "Bash(curl -s -I http://localhost:4321/222.html)",
+      "Bash(curl -s \"http://localhost:4321/\")",
+      "Bash(node -e ':*)",
+      "Bash(pkill -f node)",
+      "Bash(node --input-type=module)",
+      "Bash(ls:*)"
     ]
   }
 }

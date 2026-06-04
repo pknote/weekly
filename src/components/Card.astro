@@ -18,7 +18,8 @@ export interface Props {
 const { post } = Astro.props;
 const legacySlug = post.frontmatter?.legacySlug;
 const issueTitle = post.frontmatter?.issueTitle;
-const link = post.frontmatter?.numericUrl ?? toNumericUrl(post.url);
+const postNumber = post.url?.match(/\/(\d+)$/)?.[1] ?? post.frontmatter?.issueNumber;
+const link = postNumber ? `/${postNumber}.html` : (post.frontmatter?.numericUrl ?? toNumericUrl(post.url));
 const title = parseTitle(link, legacySlug, issueTitle);
 const { image, description, date } = post.frontmatter;
 ---
