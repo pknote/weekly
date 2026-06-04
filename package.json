@@ -1,16 +1,16 @@
 {
-  "name": "weekly",
-  "description": "潮流周刊，记录工程师 Tw93 的不枯燥生活，每周一发布，希望你喜欢",
+  "name": "胖氪周刊",
+  "description": "专注分享免费、开源、高质量的软件工具。",
   "type": "module",
   "version": "1.0.0",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/tw93/weekly.git"
+    "url": "https://github.com/pknote/weekly.git"
   },
   "author": {
-    "name": "Tw93",
-    "email": "tw93@qq.com"
+    "name": "胖氪不胖",
+    "email": "1070994205@qq.com"
   },
   "license": "MIT",
   "scripts": {

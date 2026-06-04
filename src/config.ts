@@ -8,6 +8,7 @@ export const SITE = {
     "/assets/logo.png",
   homePage: "https://windowsplus.cn/",
   blogPage: "https://pknote.top/",
+  twitterId: "pknote",
   githubId: "pknote",
   repo: "pknote/weekly",
 };
