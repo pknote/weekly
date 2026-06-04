@@ -9,6 +9,7 @@ const ASSETS_DIR = path.join(__dirname, "../public/assets");
 const BING_API = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN";
 
 async function downloadBingWallpaper() {
+  const dateStr = dayjs().format("YYYY-MM-DD");
   try {
     // Ensure assets directory exists
     if (!fs.existsSync(ASSETS_DIR)) {
