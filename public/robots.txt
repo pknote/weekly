@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Disallow crawling of generated static files (already handled by public_dir)
+Disallow: /public/
+Disallow: /db.json
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /.claude/
+
+# Sitemap
+Sitemap: https://windowsplus.cn/sitemap.xml
+Sitemap: https://windowsplus.cn/baidusitemap.xml
