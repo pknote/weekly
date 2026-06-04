@@ -20,7 +20,8 @@
       "Bash(node --input-type=module)",
       "Bash(ls:*)",
       "Bash(curl -s \"http://localhost:4326/222.html\")",
-      "Bash(pkill -f node rm rehype-image.js sed -i 's/import rehypeImage from \".\\\\/rehype-image.js\";//' astro.config.mjs sed -i 's/rehypeImage,//' astro.config.mjs cat astro.config.mjs)"
+      "Bash(pkill -f node rm rehype-image.js sed -i 's/import rehypeImage from \".\\\\/rehype-image.js\";//' astro.config.mjs sed -i 's/rehypeImage,//' astro.config.mjs cat astro.config.mjs)",
+      "Bash(node build.js)"
     ]
   }
 }
