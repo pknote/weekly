@@ -18,7 +18,8 @@
       "Bash(git push:*)",
       "Bash(git remote:*)",
       "Bash(curl:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(git branch:*)"
     ]
   }
 }
