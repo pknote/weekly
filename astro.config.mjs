@@ -74,6 +74,7 @@ function defaultLayoutPlugin() {
 
     frontmatter.description = frontmatter.description || SITE.description;
     frontmatter.image = frontmatter.image || SITE.image;
+    frontmatter.keywords = frontmatter.keywords || SITE.keywords;
 
     if (!frontmatter.date) {
       const postNumber = filePath.split(/[\/\\]posts[\/\\]/)[1]?.split("-")[0];

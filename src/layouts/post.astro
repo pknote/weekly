@@ -12,6 +12,7 @@ export interface Props {
     date: string;
     image: string;
     description: string;
+    keywords: string;
     url: string;
     socialImage: string;
     numericUrl?: string;
@@ -31,6 +32,7 @@ const {
   date,
   image,
   description,
+  keywords,
   url,
   socialImage,
   numericUrl,
@@ -47,6 +49,7 @@ const content = {
   title,
   image: image,
   description,
+  keywords,
   socialImage,
 };
 const currentUrl = `${SITE.homePage}${effectivePath}`;

@@ -4,13 +4,14 @@ export interface Props {
   content: any;
   pageURL: URL | string;
 }
-const { icon, keywords, author, twitterId, homePage, title, siteImage, description: siteDescription } = SITE;
+const { icon, keywords: siteKeywords, author, twitterId, homePage, title, siteImage, description: siteDescription } = SITE;
 const { content = {}, pageURL } = Astro.props;
-const { title: contentTitle, socialImage, description: contentDescription, image } = content;
+const { title: contentTitle, socialImage, description: contentDescription, image, keywords: contentKeywords } = content;
 
 const pageTitle = contentTitle ? `${title}${contentTitle}` : title;
 const imageSrc = socialImage || siteImage;
 const description = contentDescription || siteDescription;
+const keywords = contentKeywords || siteKeywords;
 const preloadImage = image || false;
 ---
 
