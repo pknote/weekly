@@ -2,7 +2,7 @@
   "name": "胖氪周刊",
   "description": "专注分享免费、开源、高质量的软件工具。",
   "type": "module",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "repository": {
     "type": "git",
