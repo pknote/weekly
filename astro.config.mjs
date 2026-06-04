@@ -17,7 +17,7 @@ const markdownConfig = {
 };
 
 const DEFAULT_FORMAT = "YYYY/MM/DD";
-const WEEKLY_REPO_NAME = "tw93/weekly";
+const WEEKLY_REPO_NAME = "pknote/PKBlog";
 const START_DATE = "2022-10-10";
 
 function formatDate(date) {
@@ -35,7 +35,7 @@ function getWeeklyDate(num) {
 }
 
 function getTwitterImage(num) {
-  return num >= 110 ? `https://weekly.tw93.fun/assets/${num}.jpg` : undefined;
+  return num >= 110 ? `https://windowsplus.cn/assets/${num}.jpg` : undefined;
 }
 
 function defaultLayoutPlugin() {

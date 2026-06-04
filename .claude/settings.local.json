@@ -28,7 +28,9 @@
       "Bash(curl -s http://localhost:4321/221.html)",
       "Bash(curl -s http://localhost:4321/)",
       "Bash(curl -s http://localhost:4321/posts.json)",
-      "Bash(pkill -f \"serve\\\\|node\")"
+      "Bash(pkill -f \"serve\\\\|node\")",
+      "Bash(npx pagefind:*)",
+      "Bash(echo \"not running\" ls dist/*.html dist/pagefind/)"
     ]
   }
 }

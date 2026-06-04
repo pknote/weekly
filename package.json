@@ -1,12 +1,12 @@
 {
-  "name": "weekly",
-  "description": "潮流周刊，记录工程师 Tw93 的不枯燥生活，每周一发布，希望你喜欢",
+  "name": "胖氪笔记周刊",
+  "description": "专注分享免费、开源、高质量的软件工具。欢迎关注！",
   "type": "module",
   "version": "0.2.0",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/tw93/weekly.git"
+    "url": "https://github.com/pknote/PKBlog.git"
   },
   "author": {
     "name": "Tw93",
@@ -17,7 +17,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "postbuild": "pagefind --site dist",
+    "postbuild": "pagefind --site dist --exclude-selectors \".html\"",
     "prebuild": "node build.js",
     "astro": "astro"
   },
