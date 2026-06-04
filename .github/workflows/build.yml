@@ -44,8 +44,8 @@ jobs:
           # 设置分支名称变量
           BRANCH_NAME="${GITHUB_REF#refs/heads/}"
 
-          git config user.email "tw93@qq.com"
-          git config user.name "Tw93-bot"
+          git config user.email "windwosplus@qq.com"
+          git config user.name "pknote-bot"
 
           # 添加所有变更
           git add -A
