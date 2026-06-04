@@ -1,5 +1,7 @@
 import rss from "@astrojs/rss";
 import { getIndex, parseTitle, toNumericUrl } from "@/util";
+import { SITE } from "@/config";
+
 export async function GET() {
   let allPosts = import.meta.glob("./posts/*.md", { eager: true });
   let posts = Object.values(allPosts);
@@ -16,10 +18,9 @@ export async function GET() {
   };
 
   return rss({
-    title: "胖氪周刊",
-    description: "专注分享免费、开源、高质量的软件工具。",
-    site: "https://windowsplus.cn/",
-    customData: `<image><url>https://windowsplus.cn/assets/logo.png</url></image><follow_challenge><feedId>41147805276726275</feedId><userId>42909600318350336</userId></follow_challenge>`,
+    title: SITE.title,
+    description: SITE.description,
+    site: SITE.homePage,
     items: await Promise.all(
       posts.map(async (item) => {
         const numericLink = item.frontmatter.numericUrl ?? toNumericUrl(item.url);
