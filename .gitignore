@@ -3,6 +3,9 @@
 .astro/
 .astro
 dist/
+.claude
+CLAUDE.md
+Deploy.md
 
 # Dependencies
 node_modules/
