@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "node scripts/download-bing-wallpaper.js && astro build",
+    "build": "node scripts/download-bing-wallpaper.js && node scripts/build.js && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "postbuild": "pagefind --site dist"
