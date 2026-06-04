@@ -5,51 +5,64 @@ import dayjs from "dayjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+function parseFrontmatter(content) {
+  const match = content.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) return {};
+
+  const frontmatter = {};
+  match[1].split("\n").forEach((line) => {
+    const [key, ...valueParts] = line.split(":");
+    if (key && valueParts.length > 0) {
+      frontmatter[key.trim()] = valueParts.join(":").trim().replace(/^["']|["']$/g, "");
+    }
+  });
+  return frontmatter;
+}
+
 async function main() {
   // Dynamically import config
   const configPath = path.join(__dirname, "../src/config.ts");
   const configContent = await fs.readFile(configPath, "utf8");
-  const repoMatch = configContent.match(/repo:\s*["']([^"']+)["']/);
-  const titleMatch = configContent.match(/title:\s*["']([^"']+)["']/);
   const homePageMatch = configContent.match(/homePage:\s*["']([^"']+)["']/);
-
-  const repo = repoMatch ? repoMatch[1] : "tw93/weekly";
-  const siteTitle = titleMatch ? titleMatch[1] : "Weekly";
   const homePage = homePageMatch ? homePageMatch[1].replace(/\/$/, "") : "https://weekly.tw93.fun";
 
   const postsDir = path.join(__dirname, "../src/pages/posts");
   const files = await fs.readdir(postsDir);
-  const mdFiles = files
-    .filter((file) => file.endsWith(".md"))
-    .sort((a, b) => {
-      const numA = parseInt(a.match(/(\d+)/)?.[0] || "0");
-      const numB = parseInt(b.match(/(\d+)/)?.[0] || "0");
-      return numB - numA;
-    });
+  const mdFiles = files.filter((file) => file.endsWith(".md"));
 
-  const posts = [];
+  const posts = await Promise.all(
+    mdFiles.map(async (name) => {
+      const [issueNumberPart, ...restTitleParts] = name.replace(".md", "").split("-");
+      const num = parseInt(issueNumberPart);
+      const shortTitle = restTitleParts.join("-") || issueNumberPart;
 
-  for (const name of mdFiles) {
-    const [issueNumberPart, ...restTitleParts] = name.replace(".md", "").split("-");
-    const num = parseInt(issueNumberPart);
-    const shortTitle = restTitleParts.join("-") || issueNumberPart;
-    const url = `${homePage}/posts/${num}`;
-    const title = `第 ${num} 期 - ${shortTitle}`;
+      const mdContent = await fs.readFile(path.join(postsDir, name), "utf8");
+      const frontmatter = parseFrontmatter(mdContent);
 
-    // Read markdown file to extract cover image and description
-    const mdContent = await fs.readFile(path.join(postsDir, name), "utf8");
-    const imgMatch = mdContent.match(/<img\s+src="([^"]+)"/);
-    const pic = imgMatch ? imgMatch[1] : "";
+      // Get first image from markdown if no image in frontmatter
+      let pic = frontmatter.image || "";
+      if (!pic) {
+        const imgMatch = mdContent.match(/!\[.*?\]\((.*?)\)/);
+        pic = imgMatch ? imgMatch[1] : "";
+      }
+      // Prepend homePage if pic is a relative path
+      if (pic && pic.startsWith("/")) {
+        pic = `${homePage}${pic}`;
+      }
 
-    const descMatch = mdContent.match(/<small>(.*?)<\/small>/s);
-    const description = descMatch ? descMatch[1].trim() : "";
+      return {
+        num,
+        title: shortTitle,
+        url: `${homePage}/posts/${num}`,
+        pic,
+        description: frontmatter.description || "",
+        modified: frontmatter.date || dayjs().format("YYYY-MM-DD"),
+      };
+    })
+  );
 
-    // Use local file mtime as modified date
-    const fileStat = await fs.stat(path.join(postsDir, name));
-    const modified = dayjs(fileStat.mtime).format("YYYY-MM-DD");
-
-    posts.push({ num, title: shortTitle, url, pic, description, modified });
-  }
+  // Sort by num descending
+  posts.sort((a, b) => b.num - a.num);
 
   await fs.writeFile(
     path.join(__dirname, "../public/posts.json"),
