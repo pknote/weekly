@@ -14,6 +14,7 @@ export interface Props {
     description: string;
     url: string;
     socialImage: string;
+    title?: string;
     numericUrl?: string;
     legacySlug?: string;
     issueTitle?: string;
@@ -35,12 +36,13 @@ const {
   socialImage,
   numericUrl,
   legacySlug,
-  issueTitle
+  title: postTitle
 } = Astro.props.frontmatter;
 
 const normalizedCurrent = normalize(currentPage) ?? currentPage;
 const normalizedNumeric = normalize(numericUrl);
 const effectivePath = normalizedNumeric ?? normalizedCurrent;
+const issueTitle = Astro.props.frontmatter.issueTitle ?? postTitle;
 let title = parseTitle(effectivePath, legacySlug, issueTitle);
 
 const content = {
