@@ -17,7 +17,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "postbuild": "pagefind --site dist --exclude-selectors \".html\"",
+    "postbuild": "pagefind --site dist --glob \"**/*.html\"",
     "prebuild": "node build.js",
     "astro": "astro"
   },
