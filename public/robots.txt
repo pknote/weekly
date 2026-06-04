@@ -9,5 +9,5 @@ Disallow: /.git/
 Disallow: /.claude/
 
 # Sitemap
-Sitemap: https://windowsplus.cn/sitemap.xml
-Sitemap: https://windowsplus.cn/baidusitemap.xml
+Sitemap: https://windowsplus.cn/sitemap-index.xml
+Sitemap: https://windowsplus.cn/sitemap-0.xml
