@@ -19,7 +19,11 @@
       "Bash(git remote:*)",
       "Bash(curl:*)",
       "Bash(git config:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(netstat -ano)",
+      "Bash(findstr \":4321\")",
+      "Bash(findstr \"LISTENING\")",
+      "Bash(taskkill:*)"
     ]
   }
 }
