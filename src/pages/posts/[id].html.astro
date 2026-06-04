@@ -7,10 +7,7 @@ interface PathProps {
 
 export async function getStaticPaths() {
   const postsImport = import.meta.glob("./*.md");
-  const paths: Array<
-    | { params: { id: string }; props: PathProps }
-    | { params: { id: string }; redirect: string }
-  > = [];
+  const paths: Array<{ params: { id: string }; props: PathProps }> = [];
 
   for (const [filePath] of Object.entries(postsImport)) {
     const fileName = filePath.split("/").pop();
@@ -27,37 +24,21 @@ export async function getStaticPaths() {
       params: { id },
       props: { filePath },
     });
-
-    if (slug !== id) {
-      paths.push({
-        params: { id: slug },
-        redirect: `/posts/${id}.html`,
-      });
-    }
   }
 
   return paths;
 }
 
 const decodedRouteId = decodeURIComponent(Astro.params.id ?? "");
-const hyphenIndex = decodedRouteId.indexOf("-");
-if (hyphenIndex > -1) {
-  const maybeNumeric = decodedRouteId.slice(0, hyphenIndex);
-  const numericId = Number.parseInt(maybeNumeric, 10);
-  if (!Number.isNaN(numericId)) {
-    return Astro.redirect(`/posts/${numericId}.html`, 301);
-  }
+const numericId = Number.parseInt(decodedRouteId, 10);
+if (Number.isNaN(numericId)) {
+  throw new Response(null, { status: 404 });
 }
 
 const { filePath } = Astro.props as PathProps;
 const contentModules = import.meta.glob("./*.md");
 
 if (!filePath) {
-  const numericId = Number.parseInt(decodedRouteId ?? "", 10);
-  if (!Number.isNaN(numericId)) {
-    return Astro.redirect(`/posts/${numericId}.html`, 301);
-  }
-
   throw new Response(null, { status: 404 });
 }
 
@@ -78,20 +59,9 @@ const { frontmatter, compiledContent } = postModule as {
 };
 const html = await compiledContent();
 
-const fileName = filePath.split("/").pop() ?? "";
-const legacySlug = fileName.replace(/\.md$/, "");
-const [index] = legacySlug.split("-");
-const parsedIndex = Number.parseInt(index, 10);
-const sanitizedIndex = Number.isNaN(parsedIndex) ? index : String(parsedIndex);
-const legacyUrl = `/posts/${legacySlug}`;
-const numericUrl = `/posts/${sanitizedIndex}.html`;
-
 const enhancedFrontmatter = {
   ...frontmatter,
-  url: frontmatter.url ?? legacyUrl,
-  numericUrl,
-  legacySlug,
-  issueNumber: Number.isNaN(parsedIndex) ? undefined : parsedIndex,
+  numericUrl: `/posts/${decodedRouteId}.html`,
 };
 ---
 

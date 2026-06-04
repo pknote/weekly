@@ -33,7 +33,7 @@ export const getIndex = (currentPage: string) => {
 // Normalize URL to numeric form.
 export const toNumericUrl = (currentPage: string) => {
   const index = getIndex(currentPage);
-  return Number.isNaN(index) ? currentPage : `/posts/${index}`;
+  return Number.isNaN(index) ? currentPage : `/posts/${index}.html`;
 };
 
 // Sort all articles.

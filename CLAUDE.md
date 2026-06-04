@@ -21,8 +21,11 @@ npm run preview # Preview production build
 - `posts.json` at root is an index of all posts with metadata (num, title, url, pic)
 - Frontmatter fields: `image`, `description`, `date` override auto-detection
 
-### URL/Post Numbering Convention
-The `astro.config.mjs` defaultLayoutPlugin remark plugin extracts post number from filename (first `-` separated segment) and populates `issueNumber` and `numericUrl` frontmatter. For `tw93/weekly` repo, dates are calculated backward from issue 100 (2022-10-10).
+### URL Style
+Posts use `.html` extension: `/posts/176.html`
+- File naming: `{number}.md` (e.g., `176.md`)
+- No redirects - direct file access
+- Dynamic route: `[id].html.astro`
 
 ### Image Processing
 `rehype-image.js` automatically appends `?x-oss-process=image/resize,w_3600/format,webp` to CDN images from `cdn.fliggy.com` and `gw.alicdn.com` (excluding .gif/.svg).

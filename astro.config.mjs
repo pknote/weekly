@@ -54,7 +54,7 @@ function defaultLayoutPlugin() {
         const numericIndex = Number.parseInt(numberPart, 10);
         if (!Number.isNaN(numericIndex)) {
           frontmatter.issueNumber = numericIndex;
-          frontmatter.numericUrl = `/posts/${numericIndex}.html`;
+          frontmatter.numericUrl = `/posts/${numericIndex}`;
         } else {
           frontmatter.numericUrl = `/posts/${numberPart}`;
         }
